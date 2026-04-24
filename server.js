@@ -23,7 +23,12 @@ const EMAIL_ID = "kk7310@srmist.edu.in";
 const COLLEGE_ROLL = "RA2311033010019";
 const EDGE_REGEX = /^[A-Z]->[A-Z]$/;
 
-// ── POST /bfhl ───────────────────────────────────────────────────────────────
+// ── ROUTES ───────────────────────────────────────────────────────────────────
+
+app.get("/bfhl", (req, res) => {
+  res.status(200).json({ operation_code: 1 });
+});
+
 app.post("/bfhl", (req, res) => {
   try {
     const { data } = req.body;

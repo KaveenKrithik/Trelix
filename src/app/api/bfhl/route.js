@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
 import { processBFHL } from "@/lib/bfhl";
 
+/**
+ * Common GET requirement for SRM challenges.
+ */
+export async function GET() {
+  return NextResponse.json({ operation_code: 1 }, { status: 200 });
+}
+
 export async function POST(request) {
   try {
     const body = await request.json();

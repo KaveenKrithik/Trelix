@@ -356,22 +356,43 @@ function ResultTabBtn({ active, onClick, label }) {
 }
 
 function VisualizerPanel({ hierarchies }) {
+  return (
+    <div className="space-y-12">
+      {hierarchies.map((h, i) => (
+        <div key={i} className="space-y-4">
+          <div className="flex items-center justify-between px-6">
+             <div className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                <span className="text-[11px] font-black uppercase tracking-[0.4em] text-zinc-400">Hierarchy Segment: {h.root}</span>
+             </div>
+             {h.depth && <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Depth: {h.depth}</span>}
+          </div>
+          <VisualizerCard hierarchy={h} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function VisualizerCard({ hierarchy }) {
   const containerRef = useRef(null);
   return (
-    <div className="h-[650px] bg-black rounded-[3rem] relative overflow-hidden border border-zinc-900 group shadow-2xl" ref={containerRef}>
-      <TrelixVisualizer hierarchies={hierarchies} />
-      <button 
-        onClick={async () => {
-          const canvas = await html2canvas(containerRef.current);
-          const link = document.createElement('a');
-          link.download = `trelix.png`;
-          link.href = canvas.toDataURL();
-          link.click();
-        }}
-        className="absolute top-6 right-6 p-3 bg-zinc-900 rounded-xl border border-zinc-800 opacity-0 group-hover:opacity-100 transition-opacity hover:text-white"
-      >
-        <ImageIcon size={18} />
-      </button>
+    <div className="h-[500px] bg-black rounded-[3rem] relative overflow-hidden border border-zinc-900 group shadow-2xl transition-all hover:border-zinc-700" ref={containerRef}>
+      <TrelixVisualizer hierarchy={hierarchy} />
+      <div className="absolute top-6 right-6 flex gap-2 opacity-0 group-hover:opacity-100 transition-all scale-90 group-hover:scale-100">
+        <button 
+          onClick={async () => {
+            const canvas = await html2canvas(containerRef.current);
+            const link = document.createElement('a');
+            link.download = `trelix-root-${hierarchy.root}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+          }}
+          className="p-3 bg-zinc-900/80 backdrop-blur-md rounded-xl border border-zinc-800 text-zinc-400 hover:text-white transition-colors"
+        >
+          <ImageIcon size={18} />
+        </button>
+      </div>
     </div>
   );
 }
