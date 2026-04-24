@@ -59,11 +59,17 @@ Trelix is built with a decoupled, dual-backend architecture to ensure both high 
 ### 1. Vector Analyzer
 The primary interface for inputting edge vectors and viewing real-time health metrics.
 
+![Trelix Analyzer Mockup](./trelix_analyzer_mockup_1777041903315.png)
+
 ### 2. Hierarchical Visualizer
 The interactive workspace where processed trees are rendered with dynamic layouts and export capabilities.
 
+![Trelix Visualizer Mockup](./trelix_visualizer_mockup_1777041919848.png)
+
 ### 3. API Interface (Playground)
 A built-in utility to test the BFHL endpoint directly within the browser, providing raw JSON feedback and status codes.
+
+![Trelix API Dashboard](./trelix_api_dashboard_1777041935570.png)
 
 ## Installation
 
