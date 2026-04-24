@@ -17,34 +17,37 @@ import {
 import '@xyflow/react/dist/style.css';
 import { motion } from 'framer-motion';
 
-// --- Custom Node (Sleek, Colorful, High Visibility on White) ---
+// --- Premium Trelix Node (The "First" High-Fidelity Look) ---
 const TrelixNode = ({ data }) => {
   const { isRoot, isLeaf, isCycle, label } = data;
 
   return (
     <motion.div 
-      initial={{ scale: 0.9, opacity: 0 }}
+      initial={{ scale: 0.8, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      className={`px-8 py-5 rounded-[2rem] border-2 transition-all duration-300 shadow-xl flex flex-col items-center justify-center min-w-[180px] ${
+      className={`px-8 py-5 rounded-[2.5rem] border-[3px] transition-all duration-500 shadow-2xl flex flex-col items-center justify-center min-w-[180px] relative overflow-hidden backdrop-blur-2xl ${
         isRoot 
-          ? "bg-blue-50 border-blue-200 text-blue-700" 
+          ? "bg-blue-600/40 border-blue-400 text-blue-50 shadow-[0_0_50px_rgba(59,130,246,0.5)]" 
           : isCycle 
-            ? "bg-red-50 border-red-200 text-red-700 animate-pulse"
+            ? "bg-red-600/40 border-red-500 text-red-50 shadow-[0_0_50px_rgba(239,68,68,0.6)] animate-pulse"
             : isLeaf
-              ? "bg-emerald-50 border-emerald-200 text-emerald-700"
-              : "bg-white border-zinc-200 text-zinc-700"
+              ? "bg-emerald-600/40 border-emerald-500 text-emerald-50 shadow-[0_0_40px_rgba(16,185,129,0.3)]"
+              : "bg-zinc-800/60 border-zinc-700 text-zinc-100"
       }`}
     >
-      <Handle type="target" position={Position.Top} className="!bg-zinc-300 !w-3 !h-3 !border-none" />
-      <div className="flex flex-col items-center gap-1">
-        <span className="text-lg font-black uppercase tracking-tight">{label}</span>
-        <div className="flex gap-1 mt-1">
-           {isRoot && <span className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 bg-blue-100 rounded-full">Root</span>}
-           {isLeaf && !isRoot && <span className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 bg-emerald-100 rounded-full">Terminal</span>}
-           {isCycle && <span className="text-[8px] font-black uppercase tracking-widest px-2 py-0.5 bg-red-100 rounded-full">Cycle</span>}
+      {/* Glossy Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+      
+      <Handle type="target" position={Position.Top} className="!bg-zinc-400 !w-3 !h-3 !border-none" />
+      <div className="flex flex-col items-center gap-1 z-10">
+        <span className="text-xl font-black uppercase tracking-tighter">{label}</span>
+        <div className="flex gap-2 mt-1">
+           {isRoot && <span className="text-[9px] font-black uppercase tracking-[0.2em] px-2.5 py-1 bg-white/20 rounded-full">Origin</span>}
+           {isLeaf && !isRoot && <span className="text-[9px] font-black uppercase tracking-[0.2em] px-2.5 py-1 bg-white/10 rounded-full">Leaf</span>}
+           {isCycle && <span className="text-[9px] font-black uppercase tracking-[0.2em] px-2.5 py-1 bg-red-500/40 rounded-full">Cycle</span>}
         </div>
       </div>
-      <Handle type="source" position={Position.Bottom} className="!bg-zinc-300 !w-3 !h-3 !border-none" />
+      <Handle type="source" position={Position.Bottom} className="!bg-zinc-400 !w-3 !h-3 !border-none" />
     </motion.div>
   );
 };
@@ -61,44 +64,52 @@ function VisualizerContent({ hierarchies }) {
   const { initialNodes, initialEdges } = useMemo(() => {
     const nodesList = [];
     const edgesList = [];
-    let xOffset = 0;
+    let currentX = 0;
+
+    // A more accurate layout engine that calculates subtree width
+    const getSubtreeWidth = (tree) => {
+      const children = Object.keys(tree);
+      if (children.length === 0) return 300;
+      return children.reduce((acc, child) => acc + getSubtreeWidth(tree[child]), 0);
+    };
 
     hierarchies.forEach((h, hIdx) => {
-      const componentNodes = new Set();
+      const treeWidth = h.has_cycle ? 400 : getSubtreeWidth(h.tree);
       
-      const traverse = (nodeName, tree, level = 0, xPos = 0) => {
+      const traverse = (nodeName, tree, level = 0, xStart = 0) => {
         const id = `node-${hIdx}-${nodeName}`;
-        if (componentNodes.has(id)) return;
-        componentNodes.add(id);
-
-        const x = xPos * 350 + xOffset;
-        const y = level * 250;
-
         const children = Object.keys(tree);
+        const isRoot = nodeName === h.root;
+        const isLeaf = children.length === 0;
+
+        // Center parent over its children
+        const width = getSubtreeWidth(tree);
+        const x = xStart + width / 2;
+        const y = level * 280;
 
         nodesList.push({
           id,
           type: 'trelix',
-          data: { 
-            label: nodeName, 
-            isRoot: nodeName === h.root, 
-            isLeaf: children.length === 0,
-            isCycle: h.has_cycle 
-          },
+          data: { label: nodeName, isRoot, isLeaf, isCycle: h.has_cycle },
           position: { x, y },
         });
 
-        children.forEach((child, cIdx) => {
+        let childX = xStart;
+        children.forEach((child) => {
           const childId = `node-${hIdx}-${child}`;
+          const childWidth = getSubtreeWidth(tree[child]);
+          
           edgesList.push({
             id: `edge-${id}-${childId}`,
             source: id,
             target: childId,
             animated: true,
-            style: { stroke: '#94a3b8', strokeWidth: 3 },
-            markerEnd: { type: MarkerType.ArrowClosed, color: '#94a3b8' },
+            style: { stroke: '#4f46e5', strokeWidth: 3, opacity: 0.8 },
+            markerEnd: { type: MarkerType.ArrowClosed, color: '#4f46e5' },
           });
-          traverse(child, tree[child], level + 1, xPos + cIdx);
+
+          traverse(child, tree[child], level + 1, childX);
+          childX += childWidth;
         });
       };
 
@@ -107,12 +118,13 @@ function VisualizerContent({ hierarchies }) {
           id: `node-${hIdx}-${h.root}`,
           type: 'trelix',
           data: { label: h.root, isRoot: true, isLeaf: false, isCycle: true },
-          position: { x: xOffset, y: 0 },
+          position: { x: currentX + 200, y: 0 },
         });
       } else {
-        traverse(h.root, h.tree);
+        traverse(h.root, h.tree, 0, currentX);
       }
-      xOffset += 1200;
+      
+      currentX += treeWidth + 400; // Separation between distinct hierarchies
     });
 
     return { initialNodes: nodesList, initialEdges: edgesList };
@@ -122,8 +134,8 @@ function VisualizerContent({ hierarchies }) {
     setNodes(initialNodes);
     setEdges(initialEdges);
     setTimeout(() => {
-      fitView({ padding: 0.15, duration: 1000 });
-    }, 150);
+      fitView({ padding: 0.1, duration: 1200 });
+    }, 200);
   }, [initialNodes, initialEdges, setNodes, setEdges, fitView]);
 
   return (
@@ -137,12 +149,12 @@ function VisualizerContent({ hierarchies }) {
       minZoom={0.01}
       maxZoom={1.5}
     >
-      <Background color="#f1f5f9" variant="lines" gap={40} size={1} />
-      <Controls className="!bg-white !border-zinc-200 !fill-zinc-600" />
+      <Background color="#111" variant="grid" gap={40} size={1} />
+      <Controls className="!bg-zinc-900 !border-zinc-800 !fill-white" />
       <MiniMap 
-        nodeColor={(n) => n.data.isCycle ? '#ef4444' : n.data.isRoot ? '#3b82f6' : n.data.isLeaf ? '#10b981' : '#e2e8f0'} 
-        maskColor="rgba(255,255,255,0.7)"
-        className="!bg-white !border-zinc-200 !rounded-3xl shadow-2xl"
+        nodeColor={(n) => n.data.isCycle ? '#ef4444' : n.data.isRoot ? '#3b82f6' : n.data.isLeaf ? '#10b981' : '#3f3f46'} 
+        maskColor="rgba(0,0,0,0.8)"
+        className="!bg-black !border-zinc-900 !rounded-3xl shadow-2xl"
       />
     </ReactFlow>
   );
@@ -150,7 +162,7 @@ function VisualizerContent({ hierarchies }) {
 
 export function TrelixVisualizer({ hierarchies }) {
   return (
-    <div className="w-full h-full bg-white">
+    <div className="w-full h-full bg-black">
       <ReactFlowProvider>
         <VisualizerContent hierarchies={hierarchies} />
       </ReactFlowProvider>

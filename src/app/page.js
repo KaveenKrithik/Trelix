@@ -358,7 +358,7 @@ function ResultTabBtn({ active, onClick, label }) {
 function VisualizerPanel({ hierarchies }) {
   const containerRef = useRef(null);
   return (
-    <div className="h-[600px] bg-white rounded-[2rem] relative overflow-hidden border-4 border-zinc-900 group" ref={containerRef}>
+    <div className="h-[650px] bg-black rounded-[3rem] relative overflow-hidden border border-zinc-900 group shadow-2xl" ref={containerRef}>
       <TrelixVisualizer hierarchies={hierarchies} />
       <button 
         onClick={async () => {
