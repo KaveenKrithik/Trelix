@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "BFHL | Tree Hierarchy Analyzer",
+  title: "Trelix | Hierarchical Vector Synthesis",
   description:
     "Parse directed edge lists, detect cycles, and visualize tree hierarchies.",
 };

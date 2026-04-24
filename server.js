@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// BFHL Challenge — Standalone Express Server
+// Trelix Challenge — Standalone Express Server
 // Author: Kaveen Krithik Kandan  |  kk7310@srmist.edu.in
 //
 // This file fulfils the challenge requirement for a standalone Express backend.
@@ -233,5 +233,5 @@ function calcDepth(tree) {
 
 // ── Start ────────────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`BFHL server running on http://localhost:${PORT}`);
+  console.log(`Trelix server running on http://localhost:${PORT}`);
 });

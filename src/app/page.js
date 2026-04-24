@@ -245,7 +245,7 @@ export default function TrelixApp() {
                   <div className="p-8 rounded-[3rem] bg-zinc-950 border border-zinc-900 space-y-8 shadow-2xl sticky top-24">
                      <MetricItem icon={<Cpu size={14} />} label="Processing" value="O(N + E)" />
                      <MetricItem icon={<Layers size={14} />} label="Context" value="Directed" />
-                     <MetricItem icon={<Box size={14} />} label="Model" value="BFHL v4" />
+                     <MetricItem icon={<Box size={14} />} label="Model" value="Trelix v4" />
                      <div className="pt-8 border-t border-zinc-900">
                         <div className="flex items-center justify-between mb-4">
                            <span className="text-[9px] font-black text-zinc-600 uppercase tracking-widest">Health</span>
@@ -449,7 +449,7 @@ function InterfaceModule({ pgUrl, setPgUrl, pgBody, setPgBody, pgResponse, onSen
     <div className="space-y-10 max-w-5xl mx-auto">
       <div className="space-y-2">
         <h2 className="text-3xl font-black tracking-tighter uppercase leading-none">API Interface</h2>
-        <p className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.4em]">Test the BFHL vector synthesis endpoint.</p>
+        <p className="text-[10px] text-zinc-500 font-black uppercase tracking-[0.4em]">Test the Trelix vector synthesis endpoint.</p>
       </div>
 
       <div className="flex gap-4">
