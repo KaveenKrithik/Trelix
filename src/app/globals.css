@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+}
+
+:root {
+  --bg: #000000;
+  --fg: #ffffff;
+  --border: #1a1a1a;
+  --surface: #000000;
+  --accent: #ffffff;
+  --accent-fg: #000000;
+  --muted: #64748b;
+  --glass: rgba(0, 0, 0, 0.8);
+  --accent-rgb: 255, 255, 255;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  letter-spacing: -0.01em;
+  transition: none;
+  overflow-x: hidden;
+}
+
+.glass-card {
+  background: var(--glass);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--border);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+
+.accent-glow {
+  box-shadow: 0 0 40px -10px rgba(var(--accent-rgb), 0.2);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
