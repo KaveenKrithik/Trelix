@@ -1,83 +1,47 @@
 # Trelix: Hierarchical Vector Synthesis Engine
 
-Trelix is a specialized graph processing and visualization platform designed for the SRM Full-Stack Engineering Challenge. It implements the BFHL protocol to process complex edge vectors, synthesize hierarchical data structures, and provide a high-fidelity visual interface for graph analysis.
+Trelix is a high-performance graph processing engine and visualization suite. Built to handle complex directed edge vectors, it synthesizes hierarchical data structures, detects circular dependencies, and provides an interactive visual workspace for architectural analysis.
 
-## API Documentation (BFHL Protocol)
+---
 
-The system fully adheres to the BFHL specification, providing a unified interface for data processing and retrieval.
+## Key Features
 
-### API Endpoints
-- **GET `/api/bfhl`**: Returns a static operation code (1) as per the challenge requirement.
-- **POST `/api/bfhl`**: Processes an array of edge vectors and returns a structured hierarchical analysis.
+### 1. Vector Synthesis & Health Analysis
+The core engine parses raw vector strings (e.g., `A->B`) into a validated directed graph. It automatically filters invalid entries and identifies duplicate edges while calculating a real-time "Health Score" for the input dataset.
 
-### Response Schema
-Every successful POST request returns:
-- `user_id`: Unique identifier (kaveen_krithik_kandan_11012006)
-- `email`: kk7310@srmist.edu.in
-- `roll_number`: RA2311033010019
-- `hierarchies`: An array of processed tree objects with root identification and depth calculation.
-- `invalid_entries`: Filtered list of malformed strings.
-- `duplicate_edges`: List of redundant vectors encountered during synthesis.
-- `summary`: High-level metrics including total trees, cycle counts, and the largest tree root.
-
-## Additional Feature: Interactive Vector Synthesis
-
-Beyond the standard API requirements, Trelix includes a sophisticated frontend engine that transforms raw JSON output into an interactive, node-based workspace.
-
-- **Multi-Canvas Visualization**: Each detected hierarchy is rendered on its own interactive canvas using React Flow, allowing for spatial exploration of complex trees.
-- **Cycle and Conflict Resolution**: The engine detects and visualizes cycles (back-edges) and enforces the "Diamond Rule" (single-parent hierarchy) in real-time.
-- **Vector Health Scoring**: A custom algorithm evaluates the integrity of the input data based on valid entries, cycle absence, and redundancy levels.
-- **Real-Time History Memory**: Local storage integration to track and compare previous synthesis operations.
-
-## Architecture
-
-Trelix is built with a decoupled, dual-backend architecture to ensure both high performance and deployment flexibility.
-
-### Tech Stack
-- **Frontend**: Next.js 16 (App Router) with Tailwind CSS.
-- **Visualization**: @xyflow/react (React Flow) for graph rendering.
-- **Animations**: Framer Motion for micro-interactions and state transitions.
-- **Backends**: 
-  - **Serverless**: Next.js API Routes for edge-compatible processing.
-  - **Standalone**: Node.js/Express server for legacy environment support.
-
-### System Design
-1. **Adjacency Synthesis**: Raw strings are parsed into a directed adjacency list.
-2. **Component Isolation**: Union-Find algorithm groups connected nodes into discrete sub-graphs.
-3. **Cycle Detection**: Depth-First Search (DFS) identifies back-edges to prevent infinite recursion during tree building.
-4. **Hierarchical Extraction**: Recursive descent builds nested tree objects, calculating maximum depth and identifying root nodes (in-degree = 0).
-
-## How it Works
-
-1. **Input Parsing**: The user provides a comma-separated list of vectors (e.g., `A->B, B->C`).
-2. **Validation**: The engine filters out self-loops, malformed strings, and numeric pointers.
-3. **Synthesis**: The processing pipeline builds the graph, resolves conflicts, and generates the hierarchical JSON.
-4. **Rendering**: The frontend maps the JSON structure to a set of React Flow nodes and edges, applying a hierarchical layout for optimal readability.
-
-## Screenshots
-
-### 1. Vector Analyzer
-The primary interface for inputting edge vectors and viewing real-time health metrics.
-
-![Trelix Analyzer Mockup](./trelix_analyzer_mockup_1777041903315.png)
+![Trelix Analyzer Interface](./screenshot_analyzer.png)
 
 ### 2. Hierarchical Visualizer
-The interactive workspace where processed trees are rendered with dynamic layouts and export capabilities.
+Using a specialized rendering engine, Trelix transforms abstract JSON data into interactive tree hierarchies. Each connected component is isolated and rendered on its own canvas, allowing for deep exploration of multi-tree systems.
 
-![Trelix Visualizer Mockup](./trelix_visualizer_mockup_1777041919848.png)
+![Trelix System Visualizer](./screenshot_visualizer.png)
 
-### 3. API Interface (Playground)
-A built-in utility to test the BFHL endpoint directly within the browser, providing raw JSON feedback and status codes.
+### 3. Integrated API Playground
+A built-in developer interface allows for direct interaction with the Trelix API (BFHL Protocol). Test request payloads, view raw JSON responses, and monitor system performance without leaving the application.
 
-![Trelix API Dashboard](./trelix_api_dashboard_1777041935570.png)
+![Trelix API Playground](./screenshot_playground.png)
 
-## Installation
+---
 
-### Prerequisites
-- Node.js 18.x or higher
-- npm or yarn
+## Technical Architecture
 
-### Setup
+Trelix uses a modern, decoupled architecture designed for speed and flexibility.
+
+### Core Engine (BFHL Protocol)
+- **Cycle Detection**: Implements a DFS-based algorithm (White/Gray/Black coloring) to identify back-edges and circular dependencies.
+- **Diamond Rule Resolution**: Enforces single-parent hierarchy; if a node is assigned a second parent, the synthesis engine resolves the conflict by prioritizing the initial entry.
+- **Component Isolation**: Uses a Union-Find (Disjoint Set Union) algorithm to group connected nodes into discrete hierarchies.
+
+### Tech Stack
+- **Frontend**: Next.js 16 (App Router), Tailwind CSS, Framer Motion.
+- **Graph Rendering**: @xyflow/react for interactive canvas management.
+- **Backend**: Hybrid deployment support with Next.js API Routes and a standalone Express server.
+
+---
+
+## Getting Started
+
+### Installation
 ```bash
 # Clone the repository
 git clone https://github.com/your-username/trelix.git
@@ -85,24 +49,17 @@ git clone https://github.com/your-username/trelix.git
 # Install dependencies
 npm install
 
-# Start the development server
+# Run development server
 npm run dev
 ```
 
-### Standalone Backend
-If you require the Express server without the Next.js frontend:
-```bash
-npm run server
-```
-
-## Deployment
-
-The project is optimized for Vercel (Next.js) and Render (Express).
-
-1. **Frontend + API**: Deploy the entire root to Vercel. It will automatically detect the Next.js framework and host the API at `/api/bfhl`.
-2. **Backend Only**: Deploy to Render using the command `npm run server`. Ensure the `PORT` environment variable is configured if necessary.
+### API Endpoints
+- **GET `/api/bfhl`**: Returns system operation status.
+- **POST `/api/bfhl`**: Core synthesis endpoint. Requires a JSON body with a `data` array of strings.
 
 ---
 
-**Author:** Kaveen Krithik Kandan  
-**License:** MIT
+## Author
+**Kaveen Krithik Kandan**  
+Roll: RA2311033010019  
+Email: kk7310@srmist.edu.in
